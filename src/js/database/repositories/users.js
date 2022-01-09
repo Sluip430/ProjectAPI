@@ -1,4 +1,3 @@
-const { password } = require('pg/lib/defaults');
 const pgClient = require('../database');
 
 const createDBUser = async (body) => {

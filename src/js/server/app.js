@@ -10,25 +10,25 @@ const requestListener = async function (req, res) {
     if (req.method === "OPTIONS") {
         res.statusCode = 200;
         return res.end();     
-        }
+    }
     const buffer = [];
     req.on('data', (chunk) => {
         buffer.push(chunk);
-        });
-
-        req.on('end', async () => {
-            const body = buffer.length === 0 ? null : JSON.parse(buffer);
-            await router({ req, res, body });
-        });
-
-        res.on('error', (err) => {
-            console.error(err);
-            res.statusCode = 500;
-            res.end(JSON.stringify(err));
-          });
-    };
-
-    const server = http.createServer(requestListener);
-    server.listen(port, host, () => {
-        console.log(`Server is running on http://${host}:${port}`);
     });
+
+    req.on('end', async () => {
+        const body = buffer.length === 0 ? null : JSON.parse(buffer);
+        await router({ req, res, body });
+    });
+
+    res.on('error', (err) => {
+        console.error(err);
+        res.statusCode = 500;
+        res.end(JSON.stringify(err));
+    });
+};
+
+const server = http.createServer(requestListener);
+server.listen(port, host, () => {
+    console.log(`Server is running on http://${host}:${port}`);
+});

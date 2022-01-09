@@ -1,11 +1,7 @@
 const URL = require('url');
-// const { createUniversitie , getUniversitie, getUniversitiesList } = require('../controller/controller');
-// const { createTeacherController, getTeacherByIdController } = require('../controller/userController.js');
-// const { createCourseController } = require('../controller/courseController');
 const getToDBController = require('../controller/setToDBController');
 const userController = require('../controller/userController');
 const movieController = require('../controller/movieController');
-// const { createUserController } = require('../controller/userController');
 
 
 const router = async ({ req, res, body }) => {
