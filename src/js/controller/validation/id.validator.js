@@ -1,5 +1,5 @@
 const Joi = require('joi');
 
 exports.idValidation = Joi.object().keys({
-    id : Joi.number().positive().integer().required()
+    id: Joi.number().positive().integer().required(),
 });
