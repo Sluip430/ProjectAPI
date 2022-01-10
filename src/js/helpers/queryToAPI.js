@@ -4,17 +4,17 @@ const { setGenresToDB, setGenresToDBMovies } = require('../database/repositories
 let result1;
 
 const getFilmsToDB = async () => {
-    for(let i = 2; i < 200; i++){
-        try{
+    for (let i = 2; i < 200; i++) {
+        try {
             const response = await axios.get(`https://api.themoviedb.org/3/movie/${i}?api_key=1f0a8650dad491fb0b06aabbc701815a`);
             const { error: dbError, result } = await setFilmsToDB(response.data);
             result1 = result;
             if (dbError) throw { error: { status: 500, data: dbError } };
-        }catch (error){
-            if (error.response.status === 404){
+        } catch (error) {
+            if (error.response?.status === 404){
                 i++ 
-            }else{
-                return { error: { status: 500, data: dbError } }
+            } else {
+                return { error: { status: 500, data: error } }
             }
         }
     }
@@ -34,16 +34,16 @@ const getGenresToDB = async () => {
 
 const getGenresToDBMovies = async () => {
     for(let i = 2; i < 200; i++){
-        try{
+        try {
             const response = await axios.get(`https://api.themoviedb.org/3/movie/${i}?api_key=1f0a8650dad491fb0b06aabbc701815a`);
             const { error: dbError, result } = await setGenresToDBMovies(response.data);
             result1 = result;
             if (dbError) throw { error: { status: 500, data: dbError } };
-        }catch (error){
+        } catch (error) {
             if (error.response.status === 404){
                 i++ 
-            }else{
-                return { error: { status: 500, data: dbError } }
+            } else {
+                return { error: { status: 500, data: error } };
             }
         }
     }

@@ -4,25 +4,25 @@ const { hashPassword, comparePassword } = require('../bcrypt_password/bcrypt_pas
 const { generateToken } = require('../helpers/jsonwebtoken');
 
 const createUser = async (body) => {
-    // const { value, error } = validators.validate(body, validators.userValidation);
-    // if (error) return { error };
+    const { value, error } = validators.validate(body, validators.userSignUpValidation);
+    if (error) return { status: 400, error };
 
-    const hashedPassword = await hashPassword(body.password);
-    const newBody = { ...body, password: hashedPassword };
-    console.log(newBody);
+    const hashedPassword = await hashPassword(value.password);
+    const newBody = { ...value, password: hashedPassword };
     const { error: dbError, result } = await createDBUser(newBody);
-    if (dbError) return { status: 500, result: dbError.message };
+    if (dbError) return { status: 500, data: { message: dbError } };
 
     return { status: 201, result };
 };
 
 const logIn = async (body) => {
-    // const { error, value } = schemaLogInUser.validate(body);
-    // if (error) return { status: 400, result: { message: error.message } };
+    const { value, error } = validators.validate(body, validators.userSignInValidation);
+    if (error) return { status: 400, error };
 
-    const { login, password } = body;
+    const { login, password } = value;
     const { error: dbError, result } = await logInDBUser(login);
-    if (dbError) return { status: 500, result: dbError.message };
+    if (dbError) return { status: 500, data: dbError.message };
+    if (!result) return { status: 403, data: { message: 'Login or password is invalid!' } };
 
     const { password: hash, id, first_name, last_name } = result;
     const isValidPassword = await comparePassword(password, hash);
@@ -30,12 +30,12 @@ const logIn = async (body) => {
     if (isValidPassword) {
         return {
             status: 200,
-            result: { id, first_name, last_name, login },
+            data: { id, first_name, last_name, login },
             token: jwtToken,
         };
     }
 
-    return { status: 403, result: { message: 'Login or password is invalid!' } };
+    return { status: 403, result: { data: 'Login or password is invalid!' } };
 };
 
 module.exports = {
