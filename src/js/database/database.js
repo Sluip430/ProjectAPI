@@ -1,10 +1,10 @@
 const { Client } = require('pg');
 
 const pgClient = new Client({
-    user: 'duhenets',
+    user: 'sluip',
     host: 'localhost',
     database: 'kinoBD',
-    password: 'password',
+    password: 's12122000',
     port: 5432,
 });
 
