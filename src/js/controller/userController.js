@@ -5,37 +5,47 @@ const { generateToken } = require('../helpers/jsonwebtoken');
 
 const createUser = async (body) => {
     const { value, error } = validators.validate(body, validators.userSignUpValidation);
-    if (error) return { status: 400, error };
+    if (error) return { error: { status: 400, message: error.message } };
 
     const hashedPassword = await hashPassword(value.password);
     const newBody = { ...value, password: hashedPassword };
     const { error: dbError, result } = await createDBUser(newBody);
-    if (dbError) return { status: 500, data: { message: dbError } };
+    if (dbError) return { error: { status: 500, message: dbError } };
 
-    return { status: 201, result };
+    return { result: { status: 201, data: result } };
 };
 
 const logIn = async (body) => {
     const { value, error } = validators.validate(body, validators.userSignInValidation);
-    if (error) return { status: 400, error };
+    if (error) return { error: { status: 400, message: error.message } };
 
     const { login, password } = value;
     const { error: dbError, result } = await logInDBUser(login);
-    if (dbError) return { status: 500, data: dbError.message };
-    if (!result) return { status: 403, data: { message: 'Login or password is invalid!' } };
+    if (dbError) return { error: { status: 500, message: dbError } };
+    if (!result) return { error: { status: 403, message: 'Login or password is invalid!' } };
 
-    const { password: hash, id, first_name, last_name } = result;
+    const {
+        password: hash,
+        id, first_name,
+        last_name,
+    } = result;
+
     const isValidPassword = await comparePassword(password, hash);
     const jwtToken = generateToken({ first_name, last_name, login });
-    if (isValidPassword) {
-        return {
-            status: 200,
-            data: { id, first_name, last_name, login },
-            token: jwtToken,
-        };
-    }
+    if (!isValidPassword) return { error: { status: 403, message: 'Login or password is invalid!' } };
 
-    return { status: 403, result: { data: 'Login or password is invalid!' } };
+    return {
+        result: {
+            status: 200,
+            data: {
+                id,
+                first_name,
+                last_name,
+                login,
+            },
+            token: jwtToken,
+        },
+    };
 };
 
 module.exports = {

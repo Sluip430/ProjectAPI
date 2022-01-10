@@ -2,28 +2,36 @@ const pgClient = require('../database');
 
 const setGenresToDB = async (query) => {
     const { genres } = query;
+    const values = genres.map((genre) => `(${genre.id}, '${genre.name}')`);
+
+    const pgQuery = `
+        INSERT INTO genres (id, name) 
+        VALUES ${values.join(',')};
+    `;
+
     try {
-        genres.forEach(async item =>{
-            let { id, name} = item;
-            await pgClient.query(`INSERT INTO genres ( id, name) VALUES (${id} , '${name}');`);
-        })
+        await pgClient.query(pgQuery);
         return { result: 'Insert successful' };
-    } catch (e) {
-        return { error: e.message }
+    } catch (error) {
+        return { error: error.message };
     }
 };
 
 const setGenresToDBMovies = async (query) => {
-    const { genres , id:movieId } = query;
+    const { genres, id: movieId } = query;
+    const values = genres.map((genre) => `(${movieId}, ${genre.id})`);
+
+    const pgQuery = `
+        INSERT INTO movies_genres (movie_id, genre_id) 
+        VALUES ${values.join(',')};
+    `;
+
     try {
-        genres.forEach(async item =>{
-            let { id:genreId } = item;
-            await pgClient.query(`INSERT INTO movies_genres ( movie_id, genre_id) VALUES (${movieId} , '${genreId}');`);
-        })
+        await pgClient.query(pgQuery);
         return { result: 'Insert successful' };
-    } catch (e) {
-        return { error: e.message }
+    } catch (error) {
+        return { error: error.message };
     }
 };
 
-module.exports = { setGenresToDB, setGenresToDBMovies }
+module.exports = { setGenresToDB, setGenresToDBMovies };

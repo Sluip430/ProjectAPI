@@ -1,6 +1,5 @@
 const validators = require('./validation');
-const { getMoviesDBFilter, getMoviesDBId } = require ('../database/repositories/movies')
-
+const { getMoviesDBFilter, getMoviesDBId } = require('../database/repositories/movies');
 
 const getMoviesFilter = async (query) => {
     const { value, error } = validators.validate(query, validators.movieFilterValidation);
@@ -12,7 +11,7 @@ const getMoviesFilter = async (query) => {
 };
 
 const getMoviesId = async (query) => {
-    const { value, error } = validators.validate(query, validators.movieFilterValidation);
+    const { value, error } = validators.validate(query, validators.idValidation);
     if (error) return { error };
 
     const { error: dbError, result } = await getMoviesDBId(value);

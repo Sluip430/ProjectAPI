@@ -1,9 +1,26 @@
 {
-  "dependencies": {
-    "axios": "^0.24.0",
-    "bcrypt": "^5.0.1",
-    "joi": "^17.5.0",
-    "jsonwebtoken": "^8.5.1",
-    "pg": "^8.7.1"
-  }
+    "name": "movie-api",
+    "version": "1.0.0",
+    "description": "Movie API",
+    "private": true,
+    "scripts": {
+        "start": "nodemon src/js/server/app.js",
+        "test": "jest"
+    },
+    "license": "ISC",
+    "devDependencies": {
+        "eslint": "^8.3.0",
+        "eslint-config-airbnb-base": "^15.0.0",
+        "eslint-plugin-import": "^2.25.3",
+        "jest": "^27.4.5",
+        "nodemon": "^2.0.15"
+    },
+    "dependencies": {
+        "axios": "^0.24.0",
+        "bcrypt": "^5.0.1",
+        "joi": "^17.5.0",
+        "jsonwebtoken": "^8.5.1",
+        "pg": "^8.7.1",
+        "url": "^0.11.0"
+    }
 }

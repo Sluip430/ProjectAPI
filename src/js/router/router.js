@@ -8,14 +8,11 @@ const router = async ({ req, res, body }) => {
     const { method, url } = req;
     const { query, pathname } = URL.parse(url, true);
     switch (true) {
-        case method === 'GET' && pathname === "/get-films-to-db" :
+        case method === 'GET' && pathname === '/get-films-to-db':
             ({ result, error } = await getToDBController.getFilmsToDBController(query));
             break;
-        case method === 'GET' && pathname === "/get-genres-to-db" :
+        case method === 'GET' && pathname === '/get-genres-to-db':
             ({ result, error } = await getToDBController.getGenresToDBController(query));
-            break;
-        case method === 'GET' && pathname === "/get-genres-to-movies" :
-            ({ result, error } = await getToDBController.getGenresToMovies(query));
             break;
         case (method === 'POST' && pathname === '/create-user'):
             result = await userController.createUser(body);
@@ -23,14 +20,12 @@ const router = async ({ req, res, body }) => {
         case (method === 'POST' && pathname === '/log-in'):
             result = await userController.logIn(body);
             break;
-        case method === 'GET' && pathname === "/movies":
+        case method === 'GET' && pathname === '/movies':
             ({ result, error } = await movieController.getMoviesFilter(query));
             break;
-
-        case method === 'GET' && pathname === "/movie/":
+        case method === 'GET' && pathname === '/movie/':
             ({ result, error } = await movieController.getMoviesId(query));
             break;
-
         default:
             res.statusCode = 404;
             return res.end(JSON.stringify({ error: 'Route Not Found' }));
@@ -39,10 +34,10 @@ const router = async ({ req, res, body }) => {
         res.statusCode = error.status;
         return res.end(JSON.stringify(error.data));
     }
-    const {status , token} = result;
+    const { status, token, data } = result;
     if (token) res.setHeader('token', token);
     res.statusCode = status;
-    res.end(JSON.stringify(result.data));
+    res.end(JSON.stringify(data));
 };
 
 module.exports = { router };
