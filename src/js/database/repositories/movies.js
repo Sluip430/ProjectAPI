@@ -102,7 +102,8 @@ const getMoviesDBFilter = async (query) => {
         if (language) options.push(`movies.original_language ILIKE '%${language}%'`);
         if (popularity_min) options.push(`movies.popularity > ${popularity_min}`);
         if (popularity_max) options.push(`movies.popularity < ${popularity_max}`);
-        if (release_date_first && release_date_last) options.push(`movies.release_date BETWEEN '${new Date(release_date_first).toDateString()}' AND '${new Date(release_date_last).toDateString()}`);
+        if (release_date_first) options.push(`movies.release_date > '${release_date_first}'`);
+        if (release_date_last) options.push(`movies.release_date < '${release_date_last}'`);
         if (status) options.push(`movies.status ILIKE '%${status}%'`);
         if (title) options.push(`movies.title ILIKE '%${title}%'`);
         if (revenue_min) options.push(`movies.vote_count > ${revenue_min}`);

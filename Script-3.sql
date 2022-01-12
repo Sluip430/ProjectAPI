@@ -67,7 +67,7 @@ long_name text
 
 SELECT * 
 FROM movies 
-WHERE movies.budget > 25000 
+WHERE release_date > '2003-05-30'
 
 
 
