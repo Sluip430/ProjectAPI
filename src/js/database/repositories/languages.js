@@ -16,10 +16,10 @@ const setLanguageToDB = async (query) => {
     }
 };
 
-const getLanguagesDB = async (query) => {
+const getLanguagesDB = async () => {
 
     const pgQuery = `
-        SELECT long_name
+        SELECT short_name
         FROM languages;
     `;
 

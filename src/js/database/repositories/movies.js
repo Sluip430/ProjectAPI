@@ -105,8 +105,8 @@ const getMoviesDBFilter = async (query) => {
         if (release_date_first && release_date_last) options.push(`movies.release_date BETWEEN '${new Date(release_date_first).toDateString()}' AND '${new Date(release_date_last).toDateString()}`);
         if (status) options.push(`movies.status ILIKE '%${status}%'`);
         if (title) options.push(`movies.title ILIKE '%${title}%'`);
-        if (revenue_min) options.push(`movies.budget > ${revenue_min}`);
-        if (revenue_max) options.push(`movies.budget < ${revenue_max}`);
+        if (revenue_min) options.push(`movies.vote_count > ${revenue_min}`);
+        if (revenue_max) options.push(`movies.vote_count < ${revenue_max}`);
         if (options.length) {
             pgQuery += `WHERE ${options.join(' AND ')} `;
         }
