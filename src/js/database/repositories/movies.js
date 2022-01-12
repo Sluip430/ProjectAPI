@@ -1,5 +1,6 @@
 const pgClient = require('../database');
 const { getGenresArray } = require('../../helpers/getGenresArray');
+const Joi = require("joi");
 
 const setFilmsToDB = async (query) => {
     const {
@@ -79,7 +80,7 @@ const getMoviesDBFilter = async (query) => {
     const options = [];
     const {
         page,
-        per_Page,
+        per_page,
         adult,
         budget_min,
         budget_max,
@@ -89,7 +90,9 @@ const getMoviesDBFilter = async (query) => {
         popularity_max,
         release_date_first,
         release_date_last,
-        status
+        status,
+        revenue_min,
+        revenue_max,
     } = query;
     let pgQuery = 'SELECT * FROM movies ';
     try {
@@ -102,11 +105,12 @@ const getMoviesDBFilter = async (query) => {
         if (release_date_first && release_date_last) options.push(`movies.release_date BETWEEN '${new Date(release_date_first).toDateString()}' AND '${new Date(release_date_last).toDateString()}`);
         if (status) options.push(`movies.status ILIKE '%${status}%'`);
         if (title) options.push(`movies.title ILIKE '%${title}%'`);
-        if (options.length !== 0) {
+        if (revenue_min) options.push(`movies.budget > ${revenue_min}`);
+        if (revenue_max) options.push(`movies.budget < ${revenue_max}`);
+        if (options.length) {
             pgQuery += `WHERE ${options.join(' AND ')} `;
-            options.length = 0;
         }
-        pgQuery += `ORDER BY id OFFSET ${(page - 1) * per_Page} LIMIT ${per_Page};`;
+        pgQuery += `ORDER BY id OFFSET ${(page - 1) * per_page} LIMIT ${per_page};`;
         const result = await pgClient.query(pgQuery);
         return { result: result.rows };
     } catch (error) {
