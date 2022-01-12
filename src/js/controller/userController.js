@@ -4,22 +4,22 @@ const { hashPassword, comparePassword } = require('../bcrypt_password/bcrypt_pas
 const { generateToken } = require('../helpers/jsonwebtoken');
 
 const createUser = async (body) => {
-    const { value, error } = validators.validate(body, validators.userSignUpValidation);
-    if (error) return { error: { status: 400, message: error.message } };
+    // const { value, error } = validators.validate(body, validators.userSignUpValidation);
+    // if (error) return { error: { status: 400, data: error.message } };
 
-    const hashedPassword = await hashPassword(value.password);
-    const newBody = { ...value, password: hashedPassword };
+    const hashedPassword = await hashPassword(body.password);
+    const newBody = { ...body, password: hashedPassword };
     const { error: dbError, result } = await createDBUser(newBody);
-    if (dbError) return { error: { status: 500, message: dbError } };
 
-    return { result: { status: 201, data: result } };
+    if (dbError) return { error: { status: 500, data: dbError } };
+    return { result: { data: result, status: 201 } };
 };
 
 const logIn = async (body) => {
-    const { value, error } = validators.validate(body, validators.userSignInValidation);
-    if (error) return { error: { status: 400, message: error.message } };
+    // const { value, error } = validators.validate(body, validators.userSignInValidation);
+    // if (error) return { error: { status: 400, message: error.message } };
 
-    const { login, password } = value;
+    const { login, password } = body;
     const { error: dbError, result } = await logInDBUser(login);
     if (dbError) return { error: { status: 500, message: dbError } };
     if (!result) return { error: { status: 403, message: 'Login or password is invalid!' } };

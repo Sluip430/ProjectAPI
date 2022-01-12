@@ -1,5 +1,5 @@
 const validators = require('./validation');
-const { getFilmsToDB, getGenresToDB, getGenresToDBMovies } = require('../helpers/queryToAPI');
+const { getFilmsToDB, getGenresToDB, getLanguageToDB } = require('../helpers/queryToAPI');
 
 const getFilmsToDBController = async (query) => {
     // const { value, error } = validators.validate(body, validators.courseCreateValidator);
@@ -15,17 +15,27 @@ const getGenresToDBController = async (query) => {
     // if (error) return { error };
     const { error: reqError, result } = await getGenresToDB(query);
 
-    if (reqError) return { error: { status: 500, message: reqError } };
+    if (reqError) return { error: { status: 500, data: reqError } };
     return { result: { data: result, status: 201 } };
 };
 
-const getGenresToMovies = async (query) => {
+// const getGenresToMovies = async (query) => {
+//     // const { value, error } = validators.validate(body, validators.courseCreateValidator);
+//     // if (error) return { error };
+//     const { error: reqError, result } = await getGenresToDBMovies(query);
+
+//     if (reqError) return { error: { status: 500, data: reqError } };
+//     return { result: { data: result, status: 201 } };
+// };
+
+const getLanguageToDBController = async (query) => {
     // const { value, error } = validators.validate(body, validators.courseCreateValidator);
     // if (error) return { error };
-    const { error: reqError, result } = await getGenresToDBMovies(query);
+    const { error: reqError, result } = await getLanguageToDB(query);
 
     if (reqError) return { error: { status: 500, data: reqError } };
     return { result: { data: result, status: 201 } };
 };
 
-module.exports = { getFilmsToDBController, getGenresToDBController, getGenresToMovies };
+
+module.exports = { getFilmsToDBController, getGenresToDBController, getLanguageToDBController };

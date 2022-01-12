@@ -3,7 +3,7 @@ require('../database/database');
 const { router } = require('../router/router');
 
 const HOSTNAME = 'localhost';
-const PORT = 3000;
+const PORT = 3001;
 
 const server = http.createServer((req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');

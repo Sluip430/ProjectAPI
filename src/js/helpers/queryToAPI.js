@@ -1,6 +1,7 @@
 const axios = require('axios');
 const { setFilmsToDB } = require('../database/repositories/movies');
 const { setGenresToDB, setGenresToDBMovies } = require('../database/repositories/genres');
+const { setLanguageToDB } = require('../database/repositories/languages');
 
 const getFilmsToDB = async () => {
     for (let i = 3; i < 200; i++) {
@@ -33,4 +34,16 @@ const getGenresToDB = async () => {
     }
 };
 
-module.exports = { getFilmsToDB, getGenresToDB };
+const getLanguageToDB = async () => {
+    try {
+        const response = await axios.get('https://api.themoviedb.org/3/configuration/languages?api_key=1f0a8650dad491fb0b06aabbc701815a');
+        const { error: dbError, result } = await setLanguageToDB(response.data);
+        if (dbError) return { error: { status: 500, data: dbError } };
+        return { result: { data: result, status: 200 } };
+    } catch (error) {
+        return { error: { status: 500, data: error } };
+    }
+};
+
+
+module.exports = { getFilmsToDB, getGenresToDB, getLanguageToDB };
