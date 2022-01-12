@@ -14,6 +14,9 @@ const router = async ({ req, res, body }) => {
         case method === 'GET' && pathname === '/get-genres-to-db':
             ({ result, error } = await getToDBController.getGenresToDBController(query));
             break;
+        case method === 'GET' && pathname === '/get-language-to-db':
+            ({ result, error } = await getToDBController.getLanguageToDBController(query));
+            break;
         case (method === 'POST' && pathname === '/create-user'):
             result = await userController.createUser(body);
             break;
@@ -25,6 +28,9 @@ const router = async ({ req, res, body }) => {
             break;
         case method === 'GET' && pathname === '/movie/':
             ({ result, error } = await movieController.getMoviesId(query));
+            break;
+        case method === 'GET' && pathname === '/language':
+            ({ result, error } = await movieController.getLanguages(query));
             break;
         default:
             res.statusCode = 404;

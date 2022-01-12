@@ -14,7 +14,7 @@ CREATE TABLE movies(
 id integer PRIMARY KEY,
 adult bool,
 backdrop_path VARCHAR(255),
-budget VARCHAR(255),
+budget integer,
 homepage VARCHAR(255),
 imdb_id VARCHAR(255),
 original_language VARCHAR(255),
@@ -26,7 +26,8 @@ release_date VARCHAR(255),
 status VARCHAR(255),
 title VARCHAR(255) NOT NULL,
 vote_average float,
-vote_count integer
+vote_count integer,
+runtime integer
 );
 
 create function checkRoles(user_id int)
@@ -57,6 +58,19 @@ genre_id INT NOT NULL,
 FOREIGN KEY(movie_id) REFERENCES movies(id),
 FOREIGN KEY(genre_id) REFERENCES genres(id)
 );
+
+CREATE TABLE languages(
+id serial NOT NULL,
+short_name text,
+long_name text
+);
+
+SELECT * 
+FROM movies 
+WHERE movies.budget > 25000 
+
+
+
 
 
 

@@ -1,5 +1,6 @@
 const validators = require('./validation');
 const { getMoviesDBFilter, getMoviesDBId } = require('../database/repositories/movies');
+const { getLanguagesDB } = require('../database/repositories/languages');
 
 const getMoviesFilter = async (query) => {
     const { value, error } = validators.validate(query, validators.movieFilterValidation);
@@ -20,4 +21,14 @@ const getMoviesId = async (query) => {
     return { result: { data: result, status: 200 } };
 };
 
-module.exports = { getMoviesFilter, getMoviesId };
+const getLanguages = async (query) => {
+    // const { value, error } = validators.validate(query, validators.idValidation);
+    // if (error) return { error };
+
+    const { error: dbError, result } = await getLanguagesDB(query);
+
+    if (dbError) return { error: { status: 500, data: dbError } };
+    return { result: { data: result, status: 200 } };
+};
+
+module.exports = { getMoviesFilter, getMoviesId, getLanguages };

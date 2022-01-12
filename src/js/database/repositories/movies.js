@@ -1,4 +1,5 @@
 const pgClient = require('../database');
+const { getGenresArray } = require('../../helpers/getGenresArray');
 
 const setFilmsToDB = async (query) => {
     const {
@@ -78,34 +79,34 @@ const getMoviesDBFilter = async (query) => {
     const options = [];
     const {
         page,
-        per_page,
+        per_Page,
         adult,
-        budget,
-        original_language,
-        overview, popularity,
-        release_date,
-        status,
+        budget_min,
+        budget_max,
+        language,
         title,
-        vote_average,
-        vote_count,
+        popularity_min,
+        popularity_max,
+        release_date_first,
+        release_date_last,
+        status
     } = query;
     let pgQuery = 'SELECT * FROM movies ';
     try {
         if (adult) options.push(`movies.adult = ${adult}`);
-        if (budget) options.push(`movies.budget = ${budget}`);
-        if (original_language) options.push(`movies.original_language ILIKE '%${original_language}%'`);
-        if (overview) options.push(`movies.overview ILIKE '%${overview}%'`);
-        if (popularity) options.push(`movies.popularity = ${popularity}`);
-        if (release_date) options.push(`movies.release_date ILIKE '%${release_date}%'`);
+        if (budget_min) options.push(`movies.budget > ${budget_min}`);
+        if (budget_max) options.push(`movies.budget < ${budget_max}`);
+        if (language) options.push(`movies.original_language ILIKE '%${language}%'`);
+        if (popularity_min) options.push(`movies.popularity > ${popularity_min}`);
+        if (popularity_max) options.push(`movies.popularity < ${popularity_max}`);
+        if (release_date_first && release_date_last) options.push(`movies.release_date BETWEEN '${new Date(release_date_first).toDateString()}' AND '${new Date(release_date_last).toDateString()}`);
         if (status) options.push(`movies.status ILIKE '%${status}%'`);
-        if (vote_average) options.push(`movies.vote_average = ${vote_average}`);
-        if (vote_count) options.push(`movies.vote_count = ${vote_count}`);
         if (title) options.push(`movies.title ILIKE '%${title}%'`);
         if (options.length !== 0) {
             pgQuery += `WHERE ${options.join(' AND ')} `;
             options.length = 0;
         }
-        pgQuery += `ORDER BY id OFFSET ${(page - 1) * per_page} LIMIT ${per_page};`;
+        pgQuery += `ORDER BY id OFFSET ${(page - 1) * per_Page} LIMIT ${per_Page};`;
         const result = await pgClient.query(pgQuery);
         return { result: result.rows };
     } catch (error) {
@@ -116,8 +117,13 @@ const getMoviesDBFilter = async (query) => {
 const getMoviesDBId = async (query) => {
     const { id } = query;
     try {
-        const result = await pgClient.query(`SELECT * from movies WHERE id = ${id}`);
-        return { result: result.rows[0] };
+        let result = await pgClient.query(`SELECT *
+        FROM movies
+        JOIN movies_genres ON movies.id = movies_genres.movie_id
+        JOIN genres ON movies_genres.genre_id = genres.id
+        WHERE movies.id = ${id}`);
+        result = getGenresArray(result.rows);
+        return { result };
     } catch (error) {
         return { error: error.message };
     }
