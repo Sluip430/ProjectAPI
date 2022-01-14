@@ -97,17 +97,17 @@ const getMoviesDBFilter = async (query) => {
     let pgQuery = 'SELECT * FROM movies ';
     try {
         if (adult) options.push(`movies.adult = ${adult}`);
-        if (budget_min) options.push(`movies.budget > ${budget_min}`);
-        if (budget_max) options.push(`movies.budget < ${budget_max}`);
+        if (budget_min >= 0) options.push(`movies.budget > ${budget_min}`);
+        if (budget_max >= 0) options.push(`movies.budget < ${budget_max}`);
         if (language) options.push(`movies.original_language ILIKE '%${language}%'`);
-        if (popularity_min) options.push(`movies.popularity > ${popularity_min}`);
-        if (popularity_max) options.push(`movies.popularity < ${popularity_max}`);
+        if (popularity_min >= 0) options.push(`movies.popularity > ${popularity_min}`);
+        if (popularity_max >= 0) options.push(`movies.popularity < ${popularity_max}`);
         if (release_date_first) options.push(`movies.release_date > '${release_date_first}'`);
         if (release_date_last) options.push(`movies.release_date < '${release_date_last}'`);
         if (status) options.push(`movies.status ILIKE '%${status}%'`);
         if (title) options.push(`movies.title ILIKE '%${title}%'`);
-        if (revenue_min) options.push(`movies.vote_count > ${revenue_min}`);
-        if (revenue_max) options.push(`movies.vote_count < ${revenue_max}`);
+        if (revenue_min >= 0) options.push(`movies.vote_count > ${revenue_min}`);
+        if (revenue_max >= 0) options.push(`movies.vote_count < ${revenue_max}`);
         if (options.length) {
             pgQuery += `WHERE ${options.join(' AND ')} `;
         }
