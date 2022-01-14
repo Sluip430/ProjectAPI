@@ -21,11 +21,8 @@ const getMoviesId = async (query) => {
     return { result: { data: result, status: 200 } };
 };
 
-const getLanguages = async (query) => {
-    // const { value, error } = validators.validate(query, validators.idValidation);
-    // if (error) return { error };
-
-    const { error: dbError, result } = await getLanguagesDB(query);
+const getLanguages = async () => {
+    const { error: dbError, result } = await getLanguagesDB();
 
     if (dbError) return { error: { status: 500, data: dbError } };
     return { result: { data: result, status: 200 } };
